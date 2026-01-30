@@ -1,0 +1,37 @@
+# Hytale dedicated server - run from this directory (e.g. ~/hytale-server)
+# Prerequisites: mkdir -p data config
+# Optional (manual mode): mkdir bundle, put Server/ and Assets.zip in bundle/
+# Optional (world overrides): put world-config.override.json in config/ and set env below
+
+services:
+  hytale:
+    build: .
+    image: hytale-server:latest
+    container_name: hytale
+    restart: unless-stopped
+    ports:
+      - "5520:5520/udp"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+      # Manual mode: uncomment and set HYTALE_DOWNLOAD_MODE=manual, HYTALE_SERVER_BUNDLE_PATH=/app/bundle
+      # - ./bundle:/app/bundle:ro
+    environment:
+      # Port (must match ports above if changed)
+      # HYTALE_PORT: "5520"
+      # Custom port example: use "6000:6000/udp" above and set HYTALE_PORT=6000
+      # HYTALE_PORT: "6000"
+
+      # Acquisition: downloader (default) or manual
+      # HYTALE_DOWNLOAD_MODE: downloader
+      # Manual mode: uncomment bundle volume below and set:
+      # HYTALE_DOWNLOAD_MODE: manual
+      # HYTALE_SERVER_BUNDLE_PATH: /app/bundle
+
+      # Optional: world config overrides (JSON file in config/)
+      # HYTALE_WORLD_CONFIG_OVERRIDE_FILE: /app/config/world-config.override.json
+
+      # Optional: Java heap and server args
+      # HYTALE_JAVA_XMS: 2G
+      # HYTALE_JAVA_XMX: 4G
+      # HYTALE_EXTRA_ARGS: "--disable-sentry --backup --backup-dir /app/data/backups"
